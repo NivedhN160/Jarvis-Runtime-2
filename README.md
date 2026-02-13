@@ -23,10 +23,7 @@ For detailed technical and architectural information:
 
 👉 **[REQUIREMENTS.md](./REQUIREMENTS.md)** — *Functional & Technical Specs*  
 👉 **[DESIGN.md](./DESIGN.md)** — *Architecture & Data Schema*  
-👉 **[Frontend/README.md](./Frontend/README.md)** — *App Features & Setup*  
-👉 **[AMPLIFY_GUIDE.md](./AMPLIFY_GUIDE.md)** — *Primary Hosting Guide*  
-👉 **[DEPLOYMENT.md](./DEPLOYMENT.md)** — *Technical Architecture Overview*
-
+👉 **[Frontend/README.md](./Frontend/README.md)** — *App Features & Setup*
 ---
 
 ## ⚡ Quick Start

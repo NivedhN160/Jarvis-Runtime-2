@@ -74,3 +74,20 @@ This repository is built using Kiro's spec-driven development pattern:
 1. Define requirements in `REQUIREMENTS.md`.
 2. Map architecture in `DESIGN.md`.
 3. Kiro generates the boilerplate and core logic based on these unified specifications.
+
+## 7. Why This Solution Matters for India
+
+### Economic Impact
+- **Democratizes Marketing**: Enables 63M+ MSMEs in India to access affordable influencer marketing
+- **Creator Monetization**: Unlocks earning potential for 80M+ content creators, especially in Tier 2/3 cities
+- **Reduces Friction**: Eliminates expensive agency middlemen (typically 20-40% commission)
+
+### Social Impact
+- **Language & Cultural Fit**: Semantic matching helps brands find creators who speak regional languages and understand local culture
+- **Digital Bharat**: Empowers small businesses in non-metro areas to compete in the digital economy
+- **Skill Development**: Professionalizes creator-brand relationships, building business acumen
+
+### Technical Innovation
+- **AI-First Approach**: Leverages cutting-edge AWS AI services to solve a uniquely Indian problem at scale
+- **Privacy-Conscious**: 48h ephemeral messaging respects data privacy concerns
+- **Scalable Architecture**: Built on AWS to handle India's massive and growing digital population

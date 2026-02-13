@@ -43,3 +43,12 @@ India has one of the world's most vibrant and fastest-growing creator economies.
 - **AI/LLM**: **Amazon Bedrock** (Anthropic Claude/Llama 3) for matching and content generation.
 - **Hosting**: AWS Amplify (CDN/Frontend) and AWS App Runner/Lambda (Backend).
 
+## 8. AWS Services Integration
+- **Amazon Bedrock**: Core AI engine for semantic matching and content generation
+- **AWS Amplify**: Frontend hosting with global CDN for fast delivery across India
+- **AWS App Runner**: Containerized backend deployment with auto-scaling
+- **Amazon S3**: Asset storage for creator portfolios and media files
+- **AWS Secrets Manager**: Secure management of API keys and database credentials
+- **Amazon CloudWatch**: Monitoring and logging for system health
+- **AWS IAM**: Fine-grained access control and security policies
+

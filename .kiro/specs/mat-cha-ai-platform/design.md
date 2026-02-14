@@ -1305,3 +1305,274 @@ graph TB
 8. **Creator Verification**: Blue check verification for authentic creators
 9. **Brand Reputation System**: Rating and review system for both parties
 10. **AI-Powered Content Suggestions**: Suggest content ideas based on trends
+
+
+## MCP Server Architecture
+
+MAT-CHA.AI provides a Model Context Protocol (MCP) server that exposes platform capabilities as standardized tools for AI assistants like Claude, Kiro, and other MCP-compatible clients.
+
+### MCP Server Overview
+
+```mermaid
+graph TB
+    subgraph "AI Assistants"
+        Claude[Claude Desktop]
+        Kiro[Kiro IDE]
+        Other[Other MCP Clients]
+    end
+    
+    subgraph "MCP Server Layer"
+        MCP[MAT-CHA.AI MCP Server<br/>Node.js + TypeScript]
+        Tools[10 MCP Tools]
+    end
+    
+    subgraph "MAT-CHA.AI Platform"
+        API[FastAPI Backend]
+        Bedrock[Amazon Bedrock]
+        Chroma[(ChromaDB)]
+        Mongo[(MongoDB)]
+    end
+    
+    Claude -->|stdio| MCP
+    Kiro -->|stdio| MCP
+    Other -->|stdio| MCP
+    
+    MCP --> Tools
+    Tools --> API
+    API --> Bedrock
+    API --> Chroma
+    API --> Mongo
+```
+
+### Available MCP Tools
+
+The MCP server exposes 10 tools organized by functionality:
+
+**Creator Management:**
+1. **create_creator_profile** - Create Creator profiles with semantic indexing
+2. **find_matching_creators** - AI-powered semantic matching
+
+**Brand Management:**
+3. **create_collaboration_request** - Post Brand collaboration opportunities
+4. **generate_roi_analysis** - AI-generated match explanations
+
+**Collaboration Workflow:**
+5. **express_interest** - Creator interest expression
+6. **create_chat_window** - 48-hour ephemeral chat windows
+7. **send_message** - Real-time messaging
+8. **confirm_deal** - Mutual deal confirmation
+
+**Content & Analytics:**
+9. **generate_contract** - AI-assisted contract generation
+10. **get_analytics** - Platform analytics and insights
+
+### Semantic Matching Flow via MCP
+
+```mermaid
+sequenceDiagram
+    participant AI as AI Assistant
+    participant MCP as MCP Server
+    participant API as Platform API
+    participant Chroma as ChromaDB
+    participant Bedrock as Amazon Bedrock
+    
+    AI->>MCP: create_collaboration_request(details)
+    MCP->>API: POST /api/requests
+    API->>Bedrock: Generate embedding
+    Bedrock-->>API: Vector
+    API->>Chroma: Store embedding
+    
+    AI->>MCP: find_matching_creators(requestId)
+    MCP->>API: GET /api/match/creators
+    API->>Chroma: Vector similarity search
+    Chroma-->>API: Top matches (92%, 87%, 81%)
+    API-->>MCP: Ranked creators
+    MCP-->>AI: Match results
+    
+    AI->>MCP: generate_roi_analysis(creatorId, requestId)
+    MCP->>API: POST /api/analysis/roi
+    API->>Bedrock: Generate analysis
+    Bedrock-->>API: ROI insights
+    API-->>MCP: Analysis
+    MCP-->>AI: Detailed explanation
+```
+
+### Collaboration Workflow via MCP
+
+```mermaid
+stateDiagram-v2
+    [*] --> ProfileCreated: create_creator_profile
+    [*] --> RequestPosted: create_collaboration_request
+    
+    ProfileCreated --> Matched: find_matching_creators
+    RequestPosted --> Matched
+    
+    Matched --> InterestExpressed: express_interest
+    InterestExpressed --> ChatActive: create_chat_window
+    
+    ChatActive --> Messaging: send_message
+    Messaging --> Messaging
+    
+    Messaging --> DealProposed: confirm_deal (party 1)
+    DealProposed --> DealConfirmed: confirm_deal (party 2)
+    
+    DealConfirmed --> ContractGenerated: generate_contract
+    ContractGenerated --> [*]
+    
+    ChatActive --> Expired: 48 hours
+    Expired --> [*]
+```
+
+### MCP Tool Categories
+
+```mermaid
+mindmap
+  root((MAT-CHA.AI<br/>MCP Server))
+    Creator Tools
+      create_creator_profile
+        Bio & Portfolio
+        Niche Tags
+        Languages
+        Vector Embedding
+    Brand Tools
+      create_collaboration_request
+        Requirements
+        Budget & Timeline
+        Deliverables
+      find_matching_creators
+        Semantic Search
+        Filter & Rank
+    AI Analysis
+      generate_roi_analysis
+        Content Alignment
+        Audience Fit
+        Success Probability
+      generate_contract
+        AI-Generated Terms
+        Multilingual Support
+    Collaboration
+      express_interest
+        Interest Tracking
+      create_chat_window
+        48-Hour Expiry
+      send_message
+        Real-time Chat
+      confirm_deal
+        Mutual Confirmation
+    Analytics
+      get_analytics
+        Performance Metrics
+        Conversion Rates
+```
+
+### MCP Server Configuration
+
+**Kiro IDE** (`.kiro/settings/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "mat-cha-ai": {
+      "command": "node",
+      "args": ["path/to/mcp-server/dist/index.js"],
+      "disabled": false,
+      "autoApprove": ["get_analytics"]
+    }
+  }
+}
+```
+
+**Claude Desktop**:
+```json
+{
+  "mcpServers": {
+    "mat-cha-ai": {
+      "command": "node",
+      "args": ["path/to/mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
+### MCP Server Technology Stack
+
+- **Runtime**: Node.js 20+
+- **Language**: TypeScript
+- **MCP SDK**: @modelcontextprotocol/sdk
+- **Validation**: Zod for schema validation
+- **Transport**: stdio (standard input/output)
+- **Backend Integration**: FastAPI REST API
+- **AI Services**: Amazon Bedrock
+- **Data Stores**: MongoDB Atlas, ChromaDB, Amazon S3
+
+### Tool Response Format
+
+All MCP tools return structured JSON responses:
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "data": { /* tool-specific data */ },
+  "message": "Operation completed successfully",
+  "metadata": {
+    "timestamp": "2026-02-14T10:30:00Z",
+    "requestId": "req_123"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Error description",
+  "code": "ERROR_CODE",
+  "details": { /* additional context */ }
+}
+```
+
+### Security and Validation
+
+The MCP server implements comprehensive security measures:
+
+1. **Schema Validation**: All inputs validated using Zod schemas
+2. **Authentication**: JWT token validation for API calls
+3. **Rate Limiting**: 100 requests per minute per user
+4. **Error Handling**: Graceful error handling with detailed messages
+5. **Logging**: All requests logged to AWS CloudWatch
+
+### Example Tool Usage
+
+**Create Creator Profile:**
+```typescript
+{
+  "userId": "user_123",
+  "bio": "Tech reviewer focusing on smartphones and gadgets",
+  "nicheTags": ["tech", "reviews", "gadgets"],
+  "location": "Bangalore",
+  "languages": ["English", "Hindi"]
+}
+```
+
+**Find Matching Creators:**
+```typescript
+{
+  "requestId": "request_456",
+  "minScore": 75,
+  "filters": {
+    "niche": ["tech"],
+    "location": "Bangalore",
+    "budgetRange": { "min": 10000, "max": 50000 }
+  }
+}
+```
+
+**Generate Contract:**
+```typescript
+{
+  "dealId": "deal_101",
+  "language": "Hindi"
+}
+```
+
+For complete MCP server documentation, see `mcp-server/MCP-ARCHITECTURE.md`.
